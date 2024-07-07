@@ -4,31 +4,29 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCateloguesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('catelogues', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('cover')->nullable();
-            $table->boolean('is_active')->default(true); // Sửa giá trị mặc định ở đây
-            $table->timestamps();
-        });
+        if (! Schema::hasTable('catalogues')) {
+            Schema::create('catalogues', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->string('cover')->nullable();
+                $table->boolean('is_active')->default(true);
+                $table->timestamps();
+            });
+        }
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('catelogues');
+        Schema::dropIfExists('catalogues');
     }
-}
+};

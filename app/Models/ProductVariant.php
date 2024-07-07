@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\ProductController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,9 +12,24 @@ class ProductVariant extends Model
 
     protected $fillable = [
         'product_id',
-        'quantity',
-        'image',
         'product_size_id',
         'product_color_id',
+        'quatity',
+        'image',
     ];
+
+    public function size()
+    {
+        return $this->belongsTo(ProductSize::class, 'product_size_id', 'id');
+    }
+
+    public function color()
+    {
+        return $this->belongsTo(ProductColor::class, 'product_color_id', 'id');
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 }

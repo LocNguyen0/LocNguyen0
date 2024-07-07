@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
-
     public function showFormRegister()
     {
         return view('auth.register');
@@ -26,7 +25,6 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        $data['password'] = bcrypt($data['password']);
         $user = User::query()->create($data);
 
         Auth::login($user);

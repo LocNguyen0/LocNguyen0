@@ -1,12 +1,15 @@
-<div class="footer_part">
+<footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-12">
-                <div class="footer_iner text-center">
-                    <p>2020 © Influence - Designed by <a href="#"> <i class="ti-heart"></i> </a><a
-                            href="#"> Dashboard</a></p>
+            <div class="col-sm-6">
+                <script>document.write(new Date().getFullYear())</script>
+                © Velzon.
+            </div>
+            <div class="col-sm-6">
+                <div class="text-sm-end d-none d-sm-block">
+                    Design & Develop by Themesbrand
                 </div>
             </div>
         </div>
     </div>
-</div>
+</footer>

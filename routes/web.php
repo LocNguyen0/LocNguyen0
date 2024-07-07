@@ -1,12 +1,10 @@
 <?php
 
-use App\Http\Controllers\Admin\CatalogueController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\CategoryController;
-use App\Models\Category;
-use App\Models\Catelogue;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,45 +19,27 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    $products = \App\Models\Product::query()->latest('id')->limit(4)->get();
 
-Route::get('/admin', function () {
-    return "Day la admin";
-});
+    return view('welcome', compact('products'));
+})->name('welcome');
 
-
-
-Auth::routes();
+//Auth::routes();
 
 Route::get('auth/login', [LoginController::class, 'showFormLogin'])->name('login');
 Route::post('auth/login', [LoginController::class, 'login']);
 
-Route::post('auth/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('auth/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('auth/register', [RegisterController::class, 'showFormRegister'])->name('register');
 Route::post('auth/register', [RegisterController::class, 'register']);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('product/{slug}', [ProductController::class, 'detail'])->name('product.detail');
 
-Route::prefix('admin')
-    ->as('admin.')
-    ->group(function () {
+// Mua bán hàng
+Route::get('cart/list', [CartController::class, 'list'])->name('cart.list');
+Route::post('cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::post('order/save', [OrderController::class, 'save'])->name('order.save');
 
-        Route::get('/', function () {
-            return 'day la trang dashboard';
-        });
-
-        Route::prefix('catalogues')
-            ->as('catalogues.')
-            ->group(function () {
-                Route::get('/',                 [CatalogueController::class, 'index'])->name('index');
-                Route::get('create',            [CatalogueController::class, 'create'])->name('create');
-                Route::post('store',            [CatalogueController::class, 'store'])->name('store');
-                Route::get('show/{id}',         [CatalogueController::class, 'show'])->name('show');
-                Route::get('{id}/edit',         [CatalogueController::class, 'edit'])->name('edit');
-                Route::put('{id}/update',       [CatalogueController::class, 'update'])->name('update');
-                Route::get('{id}/destroy',      [CatalogueController::class, 'destroy'])->name('destroy');
-            });
-    });

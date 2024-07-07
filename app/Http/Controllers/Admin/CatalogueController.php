@@ -3,25 +3,23 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Catelogue;
-use Illuminate\Contracts\View\View;
+use App\Models\Catalogue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class CatalogueController extends Controller
 {
-
     const PATH_VIEW = 'admin.catalogues.';
-    
     const PATH_UPLOAD = 'catalogues';
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data = Catelogue::query()->latest('id')->paginate(5);
+        $data = Catalogue::query()->latest('id')->get();
 
-        return View(self::PATH_VIEW. __FUNCTION__ , compact('data'));
+        return view(self::PATH_VIEW . __FUNCTION__, compact('data'));
     }
 
     /**
@@ -38,14 +36,13 @@ class CatalogueController extends Controller
     public function store(Request $request)
     {
         $data = $request->except('cover');
-        $data['is_active'] ??=  0;
-        
+        $data['is_active'] ??= 0;
 
-        if($request->hasFile('cover')) {
+        if ($request->hasFile('cover')) {
             $data['cover'] = Storage::put(self::PATH_UPLOAD, $request->file('cover'));
         }
 
-        Catelogue::query()->create($data);
+        Catalogue::query()->create($data);
 
         return redirect()->route('admin.catalogues.index');
     }
@@ -55,7 +52,7 @@ class CatalogueController extends Controller
      */
     public function show(string $id)
     {
-        $model = Catelogue::query()->findOrFail($id); 
+        $model = Catalogue::query()->findOrFail($id);
 
         return view(self::PATH_VIEW . __FUNCTION__, compact('model'));
     }
@@ -65,7 +62,7 @@ class CatalogueController extends Controller
      */
     public function edit(string $id)
     {
-        $model = Catelogue::query()->findOrFail($id); 
+        $model = Catalogue::query()->findOrFail($id);
 
         return view(self::PATH_VIEW . __FUNCTION__, compact('model'));
     }
@@ -75,23 +72,24 @@ class CatalogueController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $model = Catelogue::query()->findOrFail($id); 
+        $model = Catalogue::query()->findOrFail($id);
 
         $data = $request->except('cover');
-        $data['is_active'] ??=  0;
-        
+        $data['is_active'] ??= 0;
 
-        if($request->hasFile('cover')) {
+        if ($request->hasFile('cover')) {
             $data['cover'] = Storage::put(self::PATH_UPLOAD, $request->file('cover'));
+
         }
 
         $currentCover = $model->cover;
 
         $model->update($data);
 
-        if($request->hasFile('cover') && $currentCover && Storage::exists($currentCover)) {
+        if ($request->hasFile('cover') && $currentCover && Storage::exists($currentCover)) {
             Storage::delete($currentCover);
         }
+
         return back();
     }
 
@@ -100,13 +98,14 @@ class CatalogueController extends Controller
      */
     public function destroy(string $id)
     {
-        $model = Catelogue::query()->findOrFail($id); 
+        $model = Catalogue::query()->findOrFail($id);
 
         $model->delete();
 
-        if($model->cover && Storage::exists($model->cover)) {
+        if ($model->cover && Storage::exists($model->cover)) {
             Storage::delete($model->cover);
         }
+
         return back();
     }
 }

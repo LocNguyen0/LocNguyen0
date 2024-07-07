@@ -24,6 +24,10 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
+            if (Auth::user()->isAdmin()) {
+                return redirect('/admin');
+            }
+
             return redirect()->intended('/home');
         }
 
@@ -37,6 +41,7 @@ class LoginController extends Controller
         Auth::logout();
 
         \request()->session()->invalidate();
+
         return redirect('/');
     }
 }
